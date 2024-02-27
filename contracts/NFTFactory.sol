@@ -1,27 +1,31 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "./MYNFT.sol";
+import "./decentralized-social-media.sol";
 
-contract NFTFactory is ERC721URIStorage {
+contract NFTFactory {
+    NFT[] socialNFTs;
 
-    uint256 public tokenCounter;
+    function createNFT(string memory name) external returns (NFT socialNFT_){
+        socialNFT_ = new NFT(name);
 
-    constructor(string memory name, string memory symbol) ERC721(name, symbol) {
-        
-        tokenCounter =  0;
+        socialNFTs.push(socialNFT_);
     }
 
-    function createNFT(string memory tokenURI) public returns (uint256) {
+    function getClone() external view returns (NFT[] memory){
+        return  socialNFTs;
+    }
 
-        uint256 newNFTId = tokenCounter;
+    function mintText(address NFTAddress, address to, string memory uri) public returns (uint256){
+        uint256 retunedID = INFT(NFTAddress).mintText(to, uri);
+        
+        return retunedID;
+    } 
 
-        _safeMint(msg.sender, newNFTId);
-
-        _setTokenURI(newNFTId, tokenURI);
-
-        tokenCounter = tokenCounter +  1;
-
-        return newNFTId;
+    function mintMultiMedia(address NFTAddress, address to, string memory imageURI) public returns (uint256){
+        uint256 retunedID = INFT(NFTAddress).mintMultiMedia(to, imageURI);
+        
+        return retunedID;
     }
 }
